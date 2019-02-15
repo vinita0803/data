@@ -1,0 +1,220 @@
+/*
+ Testscript Name:Main Methods for Testscripts (Selenium Framework)
+ Created By:Vinita Agrawal(VA00501836)
+ Creation Date:13/12/2017
+*/
+
+package com.techm.selenium.main.method;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.Scanner;
+
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+
+import com.techm.selenium.common.methods.Common_Methods;
+
+public class Main_Method {
+	
+	public static void main(String[] args) throws Exception {
+		
+		
+			@SuppressWarnings("resource")
+			Scanner sc=new Scanner(System.in);				
+			
+			Common_Methods cm= new Common_Methods();
+				
+			int ch=0,ch1=0;
+			do{
+				
+				System.out.println("Enter the TestScript number you wish to perform");
+				System.out.println("1.Login Logout TestScript");
+				System.out.println("2.CheckBox & Radio Button TestScript");
+				System.out.println("3.Excel Sheet TestScript");
+				System.out.println("4.Image Download TestScript");
+				System.out.println("5.Get Color of Element TestScript");
+				System.out.println("6.Select Date from Datepicker TestScript");
+				System.out.println("7.Click on Button to Bring up the Alert Box TestScript");
+				System.out.println("8.Overwrite the Existing Content of Text Area TestScript");
+				System.out.println("9.Taking the Screenshot of the Website in Image & Store with DateTime Name for Image TestScript");
+				System.out.println("10.Getting Title, Current URL, Page Source TestScript");
+				System.out.println("11.Selecting Multiple Items from List & Clicking Mulitiple CheckBox TestScript");
+
+				ch=sc.nextInt();
+			
+				System.setProperty("webdriver.chrome.driver", "D:/501836/Software/chromedriver_win32/chromedriver.exe");
+			
+				//creating driver to open Chrome			
+				WebDriver driver=new ChromeDriver();
+				switch(ch)
+				{
+					
+					case 1:
+						
+						
+						cm.loading(driver,"http://opensource.demo.orangehrmlive.com/");
+					
+						cm.login(driver);
+					
+						cm.logout(driver);
+					
+						cm.quit(driver);				
+						break;
+						
+					case 2:					
+						cm.loading(driver,"http://toolsqa.com/automation-practice-form/");
+					
+						WebElement prof=cm.find(driver,By.id("profession-0"));
+						
+						WebElement se=cm.find(driver,By.id("sex-0"));
+						
+						WebElement se1=cm.find(driver,By.id("sex-1"));
+
+						//to check the check box and select the radio button
+						cm.checkbox(prof);
+						cm.radiobutton(se1);
+						
+						Thread.sleep(8000);
+						
+						//to uncheck the check box and deselect the radio button
+						cm.checkboxdes(prof);
+						cm.radiobuttonexpdes(se,se1);
+						
+						Thread.sleep(4000);
+						
+						cm.quit(driver);
+						break;
+					
+					case 3:
+						//CREATE FILE on specified path 
+						File src=new File("D:/501836/java_sel/Xlsheets/data.xlsx");		
+					  
+						//Load the file
+				   	  	FileInputStream fs = new FileInputStream(src);
+				   	  
+				   	  	// load the workbook
+				   	  	XSSFWorkbook wb=new XSSFWorkbook(fs);
+							   
+				   	  	//Load sheet- Here we are loading first sheetonly
+				   	  	XSSFSheet sh1= wb.getSheetAt(0);
+					  
+				   	  	cm.read(src,wb,sh1);
+					  
+				   	  	cm.write(src,wb,sh1);
+					  
+				   	  	cm.append(src,wb,sh1);
+					  
+				   	  	Thread.sleep(3000);
+				   	  	
+				   	  	cm.quit(driver);
+				   	  	break;
+					 
+					case 4:
+						cm.loading(driver,"https://www.india.gov.in/");
+						
+						cm.image_download(driver);
+						
+						cm.quit(driver);
+						break;
+					
+					case 5:
+						cm.loading(driver,"http://opensource.demo.orangehrmlive.com/");
+						
+						cm.login(driver);
+						
+						cm.getColourCodeOfEle(driver);
+						
+						cm.logout(driver);
+						
+						cm.quit(driver);
+						break;
+					
+					case 6:
+						cm.loading(driver,"http://opensource.demo.orangehrmlive.com/");
+						
+						cm.login(driver);
+						
+						cm.selectDateFromDatePicker(driver);
+						
+						cm.logout(driver);
+						
+						cm.quit(driver);
+						break;
+						
+					case 7:
+						cm.loading(driver,"http://demo.guru99.com/selenium/delete_customer.php");
+						
+						cm.bring_alert(driver);
+						
+						cm.quit(driver);
+						break;
+						
+					case 8:
+						cm.loading(driver,"http://demo.guru99.com/selenium/delete_customer.php");
+						
+						cm.overwrite(driver);
+						
+						cm.quit(driver);
+						break;
+						
+					case 9:
+						cm.loading(driver,"https://www.pexels.com/search/nature/");
+						
+						cm.takeSnapShot(driver);
+						
+						cm.quit(driver);
+						break;
+						
+					case 10:
+						cm.loading(driver,"https://www.pexels.com/search/nature/");
+						
+						cm.getTiltle(driver);
+						
+						cm.getPageSource(driver);
+						
+						cm.getcurrentURL(driver);
+						
+						cm.quit(driver);
+						break;
+						
+					case 11:
+						cm.loading(driver,"http://toolsqa.com/automation-practice-form/");
+						
+						cm.SelectItemFromList(driver);
+						
+						cm.MultiCheckbox(driver);
+						
+						cm.SelectMultipleItemsFromList(driver);
+												
+						cm.quit(driver);
+						break;
+						
+							
+					default:
+							System.out.println("Invalid Choice");							
+							cm.quit(driver);
+							break;
+					
+				}
+			
+				System.out.println("To Continue Press 1");
+				ch1=sc.nextInt();
+			
+			}while(ch1==1);
+			
+			 
+	}
+
+}
+
+
+//import org.openqa.selenium.firefox.FirefoxDriver;
+//System.setProperty("webdriver.gecko.driver", "D:/501836/Software/geckodriver-v0.19.1-win32/geckodriver.exe");
+
+//WebDriver driver=new FirefoxDriver();

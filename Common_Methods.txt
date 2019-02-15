@@ -1,0 +1,369 @@
+/*
+ Testscript Name:Common Methods for Testscripts (Selenium Framework)
+ Created By:Vinita Agrawal(VA00501836)
+ Creation Date:13/12/2017
+*/
+
+package com.techm.selenium.common.methods;
+
+import java.awt.Robot;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import org.apache.commons.io.FileUtils;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.Select;
+
+public class Common_Methods 
+{
+	public WebElement find(WebDriver driver, By web)
+	{
+		return driver.findElement(web);
+		
+	}
+	
+	public void sendkey(WebElement web, String key)
+	{
+		web.sendKeys(key);
+	}
+	
+	public void click(WebElement web)
+	{
+		web.click();
+	}
+	
+	public void loading(WebDriver driver,String web)
+	{	
+		driver.manage().window().maximize();
+		
+		//loading the website
+		driver.get(web);				
+	}
+	
+	public void quit(WebDriver driver)
+	{
+		driver.quit();
+	}
+	
+	public void login(WebDriver driver) throws Exception
+	{
+		WebElement uname=find(driver,By.name("txtUsername"));
+		
+		sendkey(uname, "Admin");
+		
+		WebElement upass=find(driver,By.id("txtPassword"));
+	
+		sendkey(upass, "admin");
+	
+		WebElement submit=find(driver,By.name("Submit"));
+	
+		click(submit);
+	
+		Thread.sleep(3000);	
+	}
+	
+	public void logout(WebDriver driver) throws Exception
+	{
+		WebElement wb = find(driver,By.xpath(".//*[@id='welcome']"));
+		  
+		Actions action = new Actions(driver);
+		  
+		action.moveToElement(wb).build().perform();
+		  
+		WebElement wb1 = find(driver,By.linkText("Logout"));
+		  
+		click(wb1);					
+		
+		Thread.sleep(3000);	
+	}
+
+
+	
+		
+	public void radiobutton(WebElement se)
+	{		
+		click(se);	
+		
+	}
+	
+	public void checkbox(WebElement prof)
+	{
+		click(prof);
+	}
+	
+	public void radiobuttonexpdes(WebElement se,WebElement se1)
+	{
+		if(se.isSelected())
+			click(se1);
+		else
+			click(se);			
+	}
+	
+	public void checkboxdes(WebElement exp)
+	{
+		if(exp.isSelected())
+			click(exp);
+		else
+			System.out.println("not done");		
+	}
+	
+	
+	
+	public void read(File src,XSSFWorkbook wb,XSSFSheet sh1) throws Exception
+	{
+		  //getRow specify which row and getCell which column we want to read
+		  String uname=sh1.getRow(0).getCell(0).getStringCellValue();
+	      String pswd=sh1.getRow(0).getCell(1).getStringCellValue();
+	      //display the contents
+	      System.out.println(uname+ pswd);
+			
+	}
+
+	
+	public void write(File src,XSSFWorkbook wb,XSSFSheet sh1) throws Exception
+	{
+		
+	      //here createCell will create column and setCellvalue will set the value
+	      sh1.getRow(3).createCell(2).setCellValue("523.2");
+	      
+	      //here we need to specify where you want to save file
+	      FileOutputStream fos=new FileOutputStream(src);
+	      
+		  //finally write content 
+	      wb.write(fos);
+	      
+	      //close the file
+	      fos.close();
+	      System.out.println("Excel File Written.");
+	      System.out.println("New:"+sh1.getRow(0).getCell(2).getStringCellValue());
+	      
+	}
+	
+	public void append(File src,XSSFWorkbook wb,XSSFSheet sh1) throws Exception
+	{
+		
+		//to get last row no. of in sheet
+		  //to append the data increasing row size by 1
+	      int row = sh1.getLastRowNum()+1;
+	      //System.out.println("rows:"+row);
+	      	      	      
+	      //creating new row
+	      sh1.createRow(row);
+	     	      
+	      //appending data to newly created row
+	      sh1.getRow(row).createCell(0).setCellValue("Vinita N");
+	      sh1.getRow(row).createCell(1).setCellValue("Agrawal");
+
+	      //writing the contents to file
+	      FileOutputStream fos1=new FileOutputStream(src);
+	      wb.write(fos1);
+	      fos1.close();
+	      
+	      System.out.println("Excel File Appended.");
+	      
+	      System.out.println(sh1.getRow(row).getCell(0).getStringCellValue());
+	      System.out.println(sh1.getRow(row).getCell(1).getStringCellValue());
+	      
+	}
+	
+	public void image_download(WebDriver driver) throws Exception
+	{
+		
+		Actions action = new Actions(driver);
+
+		//creating list to store the images(webelement)
+		List<WebElement> lst=driver.findElements(By.tagName("img"));
+
+		System.out.println(lst.size());
+
+		//loop for multiple images
+		for (int i=0;i<lst.size();i++)
+		{	
+			//to right click on the image
+			action.contextClick(lst.get(i));
+			action.build().perform();
+
+			Thread.sleep(1000);
+
+			//to open the saving frame
+			action.sendKeys(Keys.SHIFT,"v").build().perform();
+
+
+			//to give path and image name for every image
+			String text = "D:\\501836\\images\\image"+i;
+
+			//selecting the string to be copied
+			StringSelection stringSelection = new StringSelection(text);
+
+			//creating object of clipboard to copy the string
+			Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+
+			//copying the string to clipboard
+			clipboard.setContents(stringSelection, stringSelection);
+
+			Thread.sleep(3000);						 
+
+			//pasting the string to be saved as
+			Robot rob=new Robot();
+			rob.keyPress(KeyEvent.VK_CONTROL);
+			rob.keyPress(KeyEvent.VK_V);
+			rob.keyRelease(KeyEvent.VK_V);
+			rob.keyRelease(KeyEvent.VK_CONTROL);
+
+			rob.delay(1500);
+
+			//pressing save button
+			rob.keyPress(KeyEvent.VK_ENTER);
+		
+			System.out.println("done");
+
+			}
+	}
+	
+	public void getColourCodeOfEle(WebDriver driver)
+	{
+		System.out.println("identifiedcolour is :");
+		System.out.println(find(driver,By.id("menu_dashboard_index")).getCssValue("color"));
+		System.out.println("colour of element1 identified");
+		System.out.println(find(driver,By.id("dashboard__employeeDistribution")).getCssValue("color"));
+		System.out.println("colour of element2 identified");
+		System.out.println(find(driver,By.id("panel_wrapper_0")).getCssValue("color"));
+		System.out.println("colour of element3 identified");
+	}
+	
+	public void selectDateFromDatePicker(WebDriver driver)
+	{
+		driver.manage().timeouts().implicitlyWait(5000, TimeUnit.SECONDS);
+		find(driver,By.linkText("Leave")).click();
+		WebElement fdate = find(driver,By.id("calFromDate"));
+		click(fdate);
+		Select monthlist = new Select(find(driver,By.xpath(".//*[@id='ui-datepicker-div']/div/div/select[1]")));
+		monthlist.selectByIndex(5);
+		Select yearlist = new Select(find(driver,By.xpath(".//*[@id='ui-datepicker-div']/div/div/select[2]")));
+		yearlist.selectByIndex(20);
+		fdate = find(driver,By.xpath(".//*[@id='ui-datepicker-div']/table/tbody/tr[2]/td[4]/a"));
+		click(fdate);
+		System.out.println("date selected successfully");
+		
+	}
+	
+	public void bring_alert(WebDriver driver) throws Exception
+	{
+		find(driver,By.name("cusid")).sendKeys("1234");
+        Thread.sleep(3000);
+        find(driver,By.name("submit")).click();
+        Thread.sleep(3000);
+        Alert alert1=driver.switchTo().alert();
+        alert1.accept();
+        Alert alert12=driver.switchTo().alert();
+        alert12.accept();
+	}
+	
+	public void overwrite(WebDriver driver) throws Exception
+	{
+		WebElement we=find(driver,By.name("cusid"));
+		sendkey(we,"1234");
+		Thread.sleep(3000);
+        we.clear();
+        sendkey(we,"Admin");
+		Thread.sleep(3000);
+	}
+	
+	public void takeSnapShot(WebDriver driver) throws Exception {
+
+		// Convert web driver object to TakeScreenshot
+
+		TakesScreenshot scrShot = ((TakesScreenshot) driver);
+
+		// Call getScreenshotAs method to create image file
+
+		File SrcFile = scrShot.getScreenshotAs(OutputType.FILE);
+		
+		//take screenshot according to time
+		String datetime = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss").format(new Date());//GenericFunctions.currentDateTime();
+
+		File DestFile = new File("D:\\501836\\img" + datetime + ".png");
+
+		// Copy file at destination
+
+		FileUtils.copyFile(SrcFile, DestFile);
+		
+		Thread.sleep(3000);
+		
+		
+	}
+	public void SelectItemFromList(WebDriver driver) throws InterruptedException{
+
+		  WebElement list = find(driver,By.id("selenium_commands"));
+		  Select sel = new Select(list);
+		  sel.selectByIndex(1);
+		  System.out.println("Single Item selected from list");
+		  Thread.sleep(3000);
+
+	  }
+	
+	 public void SelectMultipleItemsFromList(WebDriver driver) throws Exception {
+		  		  
+		  WebElement ele1=find(driver,By.xpath(".//*[@id='selenium_commands']/option[2]"));
+		  click(ele1);
+		  Robot rb = new Robot();
+		  rb.keyPress(KeyEvent.VK_CONTROL);
+		  rb.keyRelease(KeyEvent.VK_ENTER);
+		  WebElement ele2 = driver.findElement(By.xpath(".//*[@id='selenium_commands']/option[5]"));
+		  click(ele2);
+		  System.out.println("Multiple Item selected from list");
+		  Thread.sleep(3000);
+	 }
+	 
+	  public void MultiCheckbox(WebDriver driver) throws InterruptedException {
+		  
+		  List<WebElement> l1 = driver.findElements(By.name("profession"));
+		  for(WebElement ele : l1)
+		  {
+			  if(!ele.isEnabled())
+				  click(ele);
+		  }
+		Thread.sleep(5000);
+		System.out.println("Multiple checkbox selected");
+	  }
+	 
+	 public void getTiltle(WebDriver driver) {
+		  
+		  String title = driver.getTitle();
+		  System.out.println("Title of page is:=" + title);
+		  
+	  }
+	 
+	 public void getPageSource(WebDriver driver) {
+		  
+		  String pageSource = driver.getPageSource();
+		  System.out.println("PageSource of page is:=" + pageSource);
+		  
+	  }
+	 public void getcurrentURL(WebDriver driver) {
+		  
+		  String currentURL = driver.getCurrentUrl();
+		  System.out.println("Currnet URL of page is:=" + currentURL);
+		  
+	}
+	 
+	 
+	 
+}
